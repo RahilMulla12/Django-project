@@ -67,7 +67,8 @@ def order_windows(request):
         customer_name = request.POST.get('customer_name')
         customer_address = request.POST.get('customer_address')
         customer_phone = request.POST.get('customer_phone')
-        note = request.POST.get('Note')
+        email = request.POST.get('customer_email')
+        note = request.POST.get('note')
 
         # Collect all window fields
         windows = []
@@ -112,6 +113,7 @@ def order_windows(request):
             customer_name=customer_name,
             customer_address=customer_address,
             customer_phone=customer_phone,
+            customer_email=email,
             note=note,
             total_price=round(total_price, 2)
         )
@@ -127,7 +129,7 @@ def order_windows(request):
             )
 
         messages.success(request, f"Order placed successfully! Total: ${round(total_price, 2)}")
-        return redirect('order_windows')
+        return redirect('payment_page', order_id=order.id)
 
     return render(request, 'order.html', {'username': request.user.username})
 
@@ -174,4 +176,24 @@ def AdminDashboard(request):
 
 def confirm_order(request):
      return render(request, 'confirm_order.html', {'username': request.user.username})
-     
+    
+def payment_page(request, order_id):
+    try:
+        order = WindowOrder.objects.get(id=order_id, user=request.user)
+       
+    except WindowOrder.DoesNotExist :
+        messages.error(request, "Order not found.")
+        return redirect('order_windows')
+
+    return render(request, 'payment.html', {'order': order})
+
+def process_payment(request, order_id):
+    if request.method == 'POST':
+        # Simulate success or integrate with real payment gateway here
+        order = WindowOrder.objects.get(id=order_id, user=request.user)
+        order.status = 'Processing'
+        order.save()
+
+        messages.success(request, "Payment successful!")
+        return redirect('order_success')
+

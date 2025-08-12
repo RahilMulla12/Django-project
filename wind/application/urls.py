@@ -13,4 +13,7 @@ urlpatterns = [
     path('UserDashboard/', views.UserDashboard, name='UserDashboard'),  # User Dashboard URL
     path('AdminDashboard/', views.AdminDashboard, name='AdminDashboard'),  # Admin Dashboard URL
     path('confirm_order/', views.confirm_order, name='confirm_order'),  # Confirm order URL
+    path('pay/<int:order_id>/', views.payment_page, name='payment_page'),
+    path('process-payment/<int:order_id>/', views.process_payment, name='process_payment'),
+
 ]
