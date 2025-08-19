@@ -455,7 +455,7 @@
         </div>
         <div class="user-info">
             <i class="fas fa-bell"></i>
-            <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Admin">
+            <img src="" alt="Admin">
         </div>
     </div>
 
@@ -468,7 +468,7 @@
                     <i class="fas fa-shopping-cart"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>1,248</h3>
+                    <h3>{{total_orders }}</h3>
                     <p>Total Window Sales</p>
                 </div>
             </div>
@@ -478,7 +478,7 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>42</h3>
+                    <h3>{{total_agents}}</h3>
                     <p>Total Agents</p>
                 </div>
             </div>
@@ -488,7 +488,7 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>28</h3>
+                    <h3>{{pending_orders}}</h3>
                     <p>Pending Orders</p>
                 </div>
             </div>
@@ -498,7 +498,7 @@
                     <i class="fas fa-dollar-sign"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>$186,420</h3>
+                    <h3>{{total_revenue}}</h3>
                     <p>Total Revenue</p>
                 </div>
             </div>
@@ -512,7 +512,7 @@
                     <i class="fas fa-plus"></i> Add New
                 </button>
             </div>
-            
+               
             <div class="table-container">
                 <table>
                     <thead>
@@ -526,16 +526,24 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    {% for order in orders %}
+                    <tbody> 
                         <tr>
-                            <td>#WIN-0248</td>
-                            <td>John Smith</td>
-                            <td>Double-Hung</td>
-                            <td>36" x 48"</td>
-                            <td>Oct 12, 2023</td>
-                            <td><span class="status ready">Ready</span></td>
+                            <td>{{order.id}}</td>
+                            <td>{{order.customer_name}}</td>
+                            <td>{% for window in order.windows.all %}
+                                 {{ window.type }} ({{ window.glass_type }})<br>
+                                 {% empty %}
+                                   No windows
+                                 {% endfor %}</td>
+                            <td>{% for window in order.windows.all %}
+                                 {{ window.height }} x {{ window.width }}<br>
+                                 {% endfor %}</td>
+                            
+                            <td>{{orders.created_at }}</td>
+                            <td><span class="status ready">{{order.status}}</span></td>
                             <td>
-                                <button class="action-btn send-email" title="Send Email">
+                                <button class="action-btn send-email" valid="order.customer_name" title="Send Email">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
                                 <button class="action-btn" title="View Details">
@@ -543,73 +551,11 @@
                                 </button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>#WIN-0317</td>
-                            <td>Sarah Johnson</td>
-                            <td>Casement</td>
-                            <td>42" x 60"</td>
-                            <td>Oct 15, 2023</td>
-                            <td><span class="status ready">Ready</span></td>
-                            <td>
-                                <button class="action-btn send-email" title="Send Email">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                                <button class="action-btn" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#WIN-0289</td>
-                            <td>Robert Brown</td>
-                            <td>Bay Window</td>
-                            <td>96" x 60"</td>
-                            <td>Oct 10, 2023</td>
-                            <td><span class="status processing">Processing</span></td>
-                            <td>
-                                <button class="action-btn" disabled title="Not Ready">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                                <button class="action-btn" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#WIN-0332</td>
-                            <td>Emily Davis</td>
-                            <td>Sliding</td>
-                            <td>72" x 48"</td>
-                            <td>Oct 18, 2023</td>
-                            <td><span class="status ready">Ready</span></td>
-                            <td>
-                                <button class="action-btn send-email" title="Send Email">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                                <button class="action-btn" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#WIN-0295</td>
-                            <td>Michael Wilson</td>
-                            <td>Picture Window</td>
-                            <td>48" x 48"</td>
-                            <td>Oct 14, 2023</td>
-                            <td><span class="status pending">Pending</span></td>
-                            <td>
-                                <button class="action-btn" disabled title="Not Ready">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                                <button class="action-btn" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        
                     </tbody>
+                    {% endfor %}
                 </table>
-            </div>
+            </div>  
         </div>
 
         <!-- Agents Section -->
@@ -627,54 +573,25 @@
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Phone</th>
-                            <th>Region</th>
+                            <th>staff</th>
+                            <th>Revenue</th>
                             <th>Sales (Last 30 Days)</th>
                             <th>Status</th>
                         </tr>
                     </thead>
+                    {% for User in Users %}
                     <tbody>
                         <tr>
-                            <td>David Wilson</td>
-                            <td>d.wilson@example.com</td>
-                            <td>(555) 123-4567</td>
-                            <td>Northeast</td>
-                            <td>$24,580</td>
-                            <td><span class="status ready">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td>Jennifer Lee</td>
-                            <td>j.lee@example.com</td>
-                            <td>(555) 987-6543</td>
-                            <td>West</td>
-                            <td>$18,420</td>
-                            <td><span class="status ready">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td>Mark Thompson</td>
-                            <td>m.thompson@example.com</td>
-                            <td>(555) 456-7890</td>
-                            <td>South</td>
-                            <td>$16,750</td>
-                            <td><span class="status ready">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td>Lisa Martinez</td>
-                            <td>l.martinez@example.com</td>
-                            <td>(555) 234-5678</td>
-                            <td>Midwest</td>
-                            <td>$14,320</td>
-                            <td><span class="status processing">On Leave</span></td>
-                        </tr>
-                        <tr>
-                            <td>James Anderson</td>
-                            <td>j.anderson@example.com</td>
-                            <td>(555) 876-5432</td>
-                            <td>Northwest</td>
-                            <td>$12,890</td>
+                            <td>
+                                {{User.username}}</td>
+                            <td>{{User.email}}</td>
+                            <td>{{staff}}</td>
+                            <td>${{ revenue_by_agent}}</td>
+                            <td>{{agent_sales_count}}</td>
                             <td><span class="status ready">Active</span></td>
                         </tr>
                     </tbody>
+                    {% endfor %}
                 </table>
             </div>
         </div>
@@ -688,12 +605,7 @@
             <form class="email-form">
                 <div class="form-group">
                     <label for="customer">Customer</label>
-                    <select id="customer">
-                        <option value="">Select a customer</option>
-                        <option value="1">John Smith (Order #WIN-0248)</option>
-                        <option value="2">Sarah Johnson (Order #WIN-0317)</option>
-                        <option value="3">Emily Davis (Order #WIN-0332)</option>
-                    </select>
+                     <input type="text" id="customer" palceholder="Customer Name" >
                 </div>
                 
                 <div class="form-group">
@@ -741,7 +653,7 @@ Thank you for choosing our services!
                 const customer = row.cells[1].textContent;
                 
                 // Set values in the email form
-                document.getElementById('customer').value = '1'; // Would be dynamic in real app
+                document.getElementById('customer').value = ''; // Would be dynamic in real app
                 document.getElementById('email').value = customer.toLowerCase().replace(' ', '.') + '@example.com';
                 document.getElementById('subject').value = `Your Window Order ${orderId} is Ready!`;
                 
