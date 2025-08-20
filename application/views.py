@@ -169,9 +169,27 @@ def superuser_required(view_func):
 @superuser_required
 def AdminDashboard(request):
     # Fetch all orders for admin view
-    all_orders = WindowOrder.objects.all().prefetch_related('windows')
+    orders = WindowOrder.objects.all().prefetch_related('windows')
+    Users = User.objects.all()
+
+    #tottal agents
     
-    context = {'orders': all_orders}
+
+    context = { 
+        'orders': orders,
+        'completed_orders': orders.filter(status='Completed').count(),
+        'pending_orders': orders.filter(status='Pending').count(),
+        'processing_orders': orders.filter(status='Processing').count(),
+        'total_revenue': orders.aggregate(total=models.Sum('total_price'))['total'] or 0,
+        'total_agents': User.objects.count(),
+        'total_orders': orders.count(),
+        'Users': Users,  # Pass all users to the template 
+        'username': request.user.username,  # Pass the username for display 
+        'email': request.user.email,  # Pass the email for display
+        'staff': request.user.is_staff,  # Pass the staff status for display
+        'revenue_by_agent': orders.filter(user=request.user).aggregate(total=models.Sum('total_price'))['total'] or 0,
+        'agent_sales_count': orders.filter(user=request.user).count(),  # Count of orders by the agent
+    }
     return render(request, 'AdminDashboard.html', context)
 
 def confirm_order(request):
@@ -196,4 +214,3 @@ def process_payment(request, order_id):
 
         messages.success(request, "Payment successful!")
         return redirect('order_success')
-
