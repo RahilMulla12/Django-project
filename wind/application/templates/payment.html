@@ -480,8 +480,8 @@
             // Simulate payment processing
             setTimeout(() => {
                 alert('Payment successful! Thank you for your order.');
-                payButton.innerHTML = '<i class="fas fa-lock me-2"></i>Pay Securely';
-                payButton.disabled = false;
+                 // ✅ Redirect to order page after clicking OK
+                window.location.href = "/"; // change "/order" to your actual order page URL
             }, 2000);
         });
         

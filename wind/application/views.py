@@ -214,4 +214,3 @@ def process_payment(request, order_id):
 
         messages.success(request, "Payment successful!")
         return redirect('order_success')
-
