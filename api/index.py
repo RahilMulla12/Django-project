@@ -1,0 +1,1 @@
+from wind.wsgi import application as app
