@@ -1,7 +1,6 @@
-from os import path
-
-from application import admin, views
-
+from django.urls import path   # ✅ correct import
+from application import views  # only import views
+from django.contrib import admin  # admin import must come from django.contrib
 
 urlpatterns = [
     path("admin/", admin.site.urls),
